@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script type="text/javascript">
+
+    $(function() {
+
+       $("#loadData").click(function () {
+  // Get the text for the Handlebars template from the script element.
+  var templateText = $("#tableTemplate").html();
+  
+  // Compile the Handlebars template.
+  window.people=10;
+  var tableTemplate = Handlebars.compile(templateText);
+      $.ajax({
+
+    url : 'https://aimtell.com/files/sites.json',
+    type : 'GET',
+    dataType:'json',
+    success : function(data) {   
+        console.log(people)
+          window.people = [
+        { "id": data.sites[0]['id'], "name": data.sites[0]['name'], "url": data.sites[0]['url']
+        },
+        { "id": data.sites[1]['id'], "name": data.sites[1]['name'], "url": data.sites[1]['url']
+        },
+        { "id": data.sites[2]['id'], "name": data.sites[2]['name'], "url": data.sites[2]['url']
+        }
+       
+
+  ];      
+  console.log(window.people)
+        $("#people").html(tableTemplate({ array: window.people }))
+      
+        
+    },
+    error : function(request,error)
+    {
+        alert("Request: "+JSON.stringify(request));
+    }  
+  // Define an array of people.
+  });
+  
+  console.log(window.people)
+  // Evaluate the template with an array of people and set the HTML
+  // for the people table.
+  }); 
+  // Deine an array of smart phones.
+  
+  // Handler for .ready() called.
+});
+   
+  </script>
+</head>
+<body>
+  
+  <h2><center>Sample Table</center></h2>
+
+<p> You should be able to recreate this table. By default, the content of the table should be empty. When you click the button, it should fetch the data located at https://aimtell.com/quiz/sites.json using ajax and insert it into the page using HANDLEBARS</p>
+
+<div id="people"></div>
+
+<button class="btn btn-primary" id="loadData" style="float: right;">Load Data</button>
+<!-- The script element is used to define the Handlebars template -->
+<script type="text/x-handlebars-template" id="tableTemplate">
+<table class="table">
+<thead>
+  <tr>
+    {{#each array.[0]}}
+      <th>{{@key}}</th>
+    {{/each}}
+  </tr>
+</thead>
+<tbody>
+  {{#each array}}
+    <tr>
+      {{#each this}}
+        <td>{{this}}</td>
+      {{/each}}
+    </tr>
+  {{/each}}
+</tbody>
+</table>
+</script>
+
+<div style="position: absolute;bottom: 5px;">
+Read about this Fiddle at: <a href="http://jsdev.wikidot.com/howto:12" target="_blank">How To: Handlebars - Create Table element</a>
+</div>
+
+</body>
+</html>
